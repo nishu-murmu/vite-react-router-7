@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router";
-import { AppRoutes } from "utils/config";
-import { NavBar } from "components/generic/Navbar";
+import { AppRoutes } from "~/utils/config";
+import { NavBar } from "~/components/generic/Navbar";
 
 const MainLayout = () => {
   return (

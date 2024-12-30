@@ -1,13 +1,13 @@
 import { ClerkProvider } from "@clerk/react-router";
 import { rootAuthLoader } from "@clerk/react-router/ssr.server";
 import { neobrutalism } from "@clerk/themes";
-import { PageNotFound } from "components/generic/PageNotFound";
-import { ThemeProvider } from "components/generic/ThemeProvider";
-import MainLayout from "layouts/MainLayout";
+import { PageNotFound } from "~/components/generic/PageNotFound";
+import { ThemeProvider } from "~/components/generic/ThemeProvider";
+import MainLayout from "~/layouts/MainLayout";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
-import useMiddleware from "hooks/use-middleware";
+import useMiddleware from "./hooks/use-middleware";
 
 export async function loader(args: Route.LoaderArgs) {
   await useMiddleware({ args });

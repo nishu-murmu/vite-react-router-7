@@ -1,4 +1,4 @@
-import useConstants from "hooks/use-constants";
+import useConstants from "~/hooks/use-constants";
 import { NavLink } from "react-router";
 import {
   SignedIn,

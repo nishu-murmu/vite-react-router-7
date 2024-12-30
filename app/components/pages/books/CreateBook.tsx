@@ -1,4 +1,4 @@
-import CreateBookForm from "components/generic/CreateBookForm";
+import CreateBookForm from "~/components/generic/CreateBookForm";
 
 export function CreateBookComponent() {
   return (

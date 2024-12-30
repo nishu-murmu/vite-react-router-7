@@ -1,4 +1,4 @@
-import { CreateBookComponent } from "~/books/CreateBook";
+import { CreateBookComponent } from "~/components/pages/books/CreateBook";
 import type { Route } from "../+types/root";
 
 export async function action({ request }: Route.ActionArgs) {

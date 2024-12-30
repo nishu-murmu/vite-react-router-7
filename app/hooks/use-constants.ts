@@ -1,5 +1,5 @@
 import { useAuth } from "@clerk/react-router";
-import { AppRoutes } from "utils/config";
+import { AppRoutes } from "~/utils/config";
 
 const useConstants = () => {
   const { isLoaded, userId } = useAuth();
