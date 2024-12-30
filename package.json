@@ -1,12 +1,14 @@
 {
-  "name": "demo-vite",
+  "name": "Bookville",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "cross-env NODE_ENV=production react-router build",
     "dev": "react-router dev",
     "start": "cross-env NODE_ENV=production react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "dev-server": "cd server && pnpm dev",
+    "all": "concurrently -n client,server \"pnpm dev\" \"pnpm dev-server\""
   },
   "dependencies": {
     "@clerk/react-router": "^0.1.5",
@@ -34,6 +36,7 @@
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.1",
     "cross-env": "^7.0.3",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",

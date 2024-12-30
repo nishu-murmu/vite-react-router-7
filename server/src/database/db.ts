@@ -1,6 +1,7 @@
 import { createPool } from "mysql2";
 import { Kysely, MysqlDialect } from "kysely";
 import mysql from "mysql2";
+import { DB } from "../types/db";
 
 const dialect = new MysqlDialect({
   pool: createPool({
@@ -31,6 +32,6 @@ export const connect = async () => {
   }
 };
 
-export const db = new Kysely<any>({
+export const db = new Kysely<DB>({
   dialect,
 });
