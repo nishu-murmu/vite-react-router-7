@@ -2,11 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
+@layer base {
+  :root {
+    color-scheme: light;
+    color: theme('colors.gray.900');
+    background-color: theme('colors.white');
+  }
 
-  @media (prefers-color-scheme: dark) {
+  .dark {
     color-scheme: dark;
+    color: theme('colors.gray.50');
+    background-color: theme('colors.gray.950');
+  }
+}
+
+/* Optional: Add smooth transitions for theme changes */
+@layer base {
+  * {
+    @apply transition-colors duration-200;
   }
 }

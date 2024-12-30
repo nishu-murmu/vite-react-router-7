@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Form } from "react-router";
 
-const DashboardForm = () => {
+const CreateBookForm = () => {
   const [formData, setFormData] = useState<Record<string, string>>({
     title: "",
     author: "",
@@ -73,9 +73,7 @@ const DashboardForm = () => {
       return;
     }
 
-    // Handle successful submission
     console.log("Form submitted:", formData);
-    // Add your submission logic here
   };
 
   return (
@@ -128,4 +126,4 @@ const DashboardForm = () => {
   );
 };
 
-export default DashboardForm;
+export default CreateBookForm;

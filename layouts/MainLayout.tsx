@@ -1,14 +1,25 @@
+import { Link, Outlet } from "react-router";
+import { AppRoutes } from "utils/config";
 import { NavBar } from "components/generic/Navbar";
-import { Outlet } from "react-router";
 
 const MainLayout = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <NavBar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <>
+      <header className="flex items-center justify-between py-8 px-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <Link
+          to={AppRoutes.home}
+          className="text-xl font-bold text-gray-900 dark:text-gray-50"
+        >
+          Booksville
+        </Link>
+        <div className="flex items-center gap-4">
+          <NavBar />
+        </div>
+      </header>
+      <main className="min-h-[calc(100vh-5rem)] bg-white dark:bg-gray-950">
         <Outlet />
       </main>
-    </div>
+    </>
   );
 };
 
