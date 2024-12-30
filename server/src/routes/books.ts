@@ -5,21 +5,41 @@ import { sendResponse } from "../utils";
 export const createBook = async (req: Request, res: Response) => {
   try {
     const { title, author } = req.body;
-    const response = await db
+    const coverImage = req.file ? `/uploads/${req.file.filename}` : null;
+
+    console.log("🚀 ~ createBook ~ coverImage:", coverImage);
+    const book = await db
       .insertInto("books")
       .values({
         name: title,
         author: author,
+        image: coverImage,
+        user_id: 1,
       })
       .executeTakeFirst();
-    res.send(
+
+    const createdBook = await db
+      .selectFrom("books")
+      .selectAll()
+      .where("id", "=", parseInt((book.insertId || 0).toString()))
+      .executeTakeFirst();
+
+    res.status(201).send(
       sendResponse({
-        data: parseInt((response.insertId || 0).toString()),
+        data: createdBook,
         message: "Book created successfully",
         status: "success",
       })
     );
   } catch (error) {
-    console.log(error);
+    console.error("Error creating book:", error);
+    res.status(500).send(
+      sendResponse({
+        message: "Error creating book",
+        status: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
+        data: null,
+      })
+    );
   }
 };

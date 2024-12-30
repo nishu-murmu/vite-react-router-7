@@ -14,6 +14,7 @@ export interface Books {
   id: Generated<number>;
   image: string | null;
   name: string | null;
+  user_id: number | null;
 }
 
 export interface DB {

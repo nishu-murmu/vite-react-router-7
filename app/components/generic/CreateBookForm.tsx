@@ -1,5 +1,5 @@
+import { useUser } from "@clerk/react-router";
 import { useState } from "react";
-import { Form } from "react-router";
 
 const CreateBookForm = () => {
   const [formData, setFormData] = useState<Record<string, string>>({
@@ -7,8 +7,10 @@ const CreateBookForm = () => {
     author: "",
     message: "",
   });
-
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const user = useUser();
 
   const validateField = (name: string, value: string) => {
     switch (name) {
@@ -20,15 +22,11 @@ const CreateBookForm = () => {
           : "";
       case "author":
         return !value.trim()
-          ? "author is required"
-          : !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)
-          ? "Invalid author address"
-          : "";
-      case "message":
-        return !value.trim()
-          ? "Message is required"
-          : value.length < 10
-          ? "Message must be at least 10 characters"
+          ? "Author is required"
+          : value.length < 2
+          ? "Author name must be at least 2 characters"
+          : !/^[A-Za-z0-9\s.'-]+$/i.test(value)
+          ? "Author name can only contain letters, numbers, spaces and basic punctuation"
           : "";
       default:
         return "";
@@ -42,7 +40,6 @@ const CreateBookForm = () => {
       [name]: value,
     }));
 
-    // Clear error when user starts typing
     if (errors[name] && value.trim() !== "") {
       setErrors((prev) => ({
         ...prev,
@@ -51,14 +48,17 @@ const CreateBookForm = () => {
     }
   };
 
-  const setFieldValue = (fieldName: any, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [fieldName]: value,
-    }));
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setCoverImage(file);
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      return () => URL.revokeObjectURL(previewUrl);
+    }
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all fields
@@ -73,11 +73,39 @@ const CreateBookForm = () => {
       return;
     }
 
-    console.log("Form submitted:", formData);
+    // Create FormData object for multipart/form-data submission
+    const submitData = new FormData();
+    submitData.append("title", formData.title);
+    submitData.append("user_id", user.user?.id as string);
+    submitData.append("author", formData.author);
+    if (coverImage) {
+      submitData.append("coverImage", coverImage);
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/api/book", {
+        method: "POST",
+        body: submitData,
+      });
+
+      const result = await response.json();
+      console.log("Form submitted:", result);
+
+      // Clear form after successful submission
+      setFormData({ title: "", author: "", message: "" });
+      setCoverImage(null);
+      setImagePreview("");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   return (
-    <Form method="POST" className="w-full space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className="w-full space-y-4"
+      encType="multipart/form-data"
+    >
       <div className="space-y-2">
         <label
           htmlFor="title"
@@ -101,7 +129,7 @@ const CreateBookForm = () => {
           htmlFor="author"
           className="block text-sm font-medium text-gray-700"
         >
-          author
+          Author
         </label>
         <input
           type="text"
@@ -116,13 +144,39 @@ const CreateBookForm = () => {
         )}
       </div>
 
+      <div className="space-y-2">
+        <label
+          htmlFor="coverImage"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Cover Image
+        </label>
+        <input
+          type="file"
+          id="coverImage"
+          name="coverImage"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        {imagePreview && (
+          <div className="mt-2">
+            <img
+              src={imagePreview}
+              alt="Cover preview"
+              className="w-32 h-32 object-cover rounded-md"
+            />
+          </div>
+        )}
+      </div>
+
       <button
         type="submit"
         className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
         Submit
       </button>
-    </Form>
+    </form>
   );
 };
 
