@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 dotenv.config({
   debug: true,
+  encoding: "utf8",
 });
 
 const dialect = new MysqlDialect({

@@ -1,6 +1,4 @@
-import { Crown, Medal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Badge } from "~/components/ui/badge";
 import { Card } from "~/components/ui/card";
 import {
   Table,
@@ -22,7 +20,6 @@ const AllUsersComponent = ({ users }: any) => {
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="w-14">Rank</TableHead>
                   <TableHead>User</TableHead>
                   <TableHead className="text-right">Score</TableHead>
                   <TableHead className="text-right">Accuracy</TableHead>
@@ -32,22 +29,11 @@ const AllUsersComponent = ({ users }: any) => {
               <TableBody>
                 {users.map((user: any) => (
                   <TableRow key={user.id} className="hover:bg-muted/50">
-                    <TableCell className="font-medium">
-                      {user.rank === 1 ? (
-                        <Crown className="h-5 w-5 text-yellow-500" />
-                      ) : user.rank === 2 ? (
-                        <Medal className="h-5 w-5 text-gray-400" />
-                      ) : user.rank === 3 ? (
-                        <Medal className="h-5 w-5 text-amber-600" />
-                      ) : (
-                        user.rank
-                      )}
-                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar>
                           <AvatarImage
-                            src={user.avatarUrl}
+                            src={user.profile_image_url}
                             alt={user.username}
                           />
                           <AvatarFallback>
@@ -56,27 +42,21 @@ const AllUsersComponent = ({ users }: any) => {
                         </Avatar>
                         <div className="flex flex-col">
                           <span className="font-medium">{user.username}</span>
-                          {user.badges?.map((badge: any) => (
-                            <Badge
-                              key={badge}
-                              variant="default"
-                              className="w-fit text-xs"
-                            >
-                              {badge}
-                            </Badge>
-                          ))}
+                          <span className="text-muted-foreground text-xs">
+                            {user.email_address}
+                          </span>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="text-right font-mono">
-                      {user.score.toFixed(2)}
+                      {user.score?.toFixed(2) || 0}
                     </TableCell>
                     <TableCell className="text-right font-mono">
-                      {user.accuracy.toFixed(2)}%
+                      {user.accuracy?.toFixed(2) || 0}%
                     </TableCell>
                     <TableCell className="text-right text-muted-foreground">
-                      {new Date(user.lastActive).toLocaleDateString()}{" "}
-                      {new Date(user.lastActive).toLocaleTimeString()}
+                      {new Date(user.updated_at).toLocaleDateString()}{" "}
+                      {new Date(user.updated_at).toLocaleTimeString()}
                     </TableCell>
                   </TableRow>
                 ))}

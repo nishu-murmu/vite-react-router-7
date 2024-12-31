@@ -1,11 +1,14 @@
 import { useUser } from "@clerk/react-router";
 import { useState } from "react";
+import { Label } from "~/components/ui/label";
+import { Checkbox } from "../ui/checkbox";
 
 const CreateBookForm = () => {
-  const [formData, setFormData] = useState<Record<string, string>>({
+  const [formData, setFormData] = useState<Record<string, string | boolean>>({
     title: "",
     author: "",
     message: "",
+    is_public: false,
   });
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -14,11 +17,11 @@ const CreateBookForm = () => {
 
   const validateField = (name: string, value: string) => {
     switch (name) {
-      case "name":
+      case "title":
         return !value.trim()
-          ? "title is required"
+          ? "Title is required"
           : value.length < 2
-          ? "title must be at least 2 characters"
+          ? "Title must be at least 2 characters"
           : "";
       case "author":
         return !value.trim()
@@ -48,6 +51,13 @@ const CreateBookForm = () => {
     }
   };
 
+  const handleCheckboxChange = (checked: boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      is_public: checked,
+    }));
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -64,8 +74,10 @@ const CreateBookForm = () => {
     // Validate all fields
     const newErrors = {} as any;
     Object.keys(formData).forEach((key) => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
+      if (key !== "is_public" && key !== "message") {
+        const error = validateField(key, formData[key] as string);
+        if (error) newErrors[key] = error;
+      }
     });
 
     if (Object.keys(newErrors).length > 0) {
@@ -75,9 +87,11 @@ const CreateBookForm = () => {
 
     // Create FormData object for multipart/form-data submission
     const submitData = new FormData();
-    submitData.append("title", formData.title);
+    submitData.append("title", formData.title as string);
     submitData.append("user_id", user.user?.id as string);
-    submitData.append("author", formData.author);
+    submitData.append("author", formData.author as string);
+    submitData.append("is_public", formData.is_public.toString());
+
     if (coverImage) {
       submitData.append("coverImage", coverImage);
     }
@@ -92,7 +106,12 @@ const CreateBookForm = () => {
       console.log("Form submitted:", result);
 
       // Clear form after successful submission
-      setFormData({ title: "", author: "", message: "" });
+      setFormData({
+        title: "",
+        author: "",
+        message: "",
+        is_public: false,
+      });
       setCoverImage(null);
       setImagePreview("");
     } catch (error) {
@@ -117,7 +136,7 @@ const CreateBookForm = () => {
           type="text"
           id="title"
           name="title"
-          value={formData.title}
+          value={formData.title as string}
           onChange={handleChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
@@ -135,7 +154,7 @@ const CreateBookForm = () => {
           type="text"
           id="author"
           name="author"
-          value={formData.author}
+          value={formData.author as string}
           onChange={handleChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
@@ -168,6 +187,20 @@ const CreateBookForm = () => {
             />
           </div>
         )}
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="is_public"
+          checked={!!formData.is_public}
+          onCheckedChange={handleCheckboxChange}
+        />
+        <Label
+          htmlFor="is_public"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          Make this book public
+        </Label>
       </div>
 
       <button
