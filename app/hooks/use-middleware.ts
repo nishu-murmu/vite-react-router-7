@@ -1,7 +1,7 @@
 import { getAuth } from "@clerk/react-router/ssr.server";
 import { redirect } from "react-router";
 import { privateRoutes } from "~/utils/config";
-import type { Route } from "../app/+types/root";
+import type { Route } from "../+types/root";
 
 const useMiddleware = async ({ args }: { args: Route.LoaderArgs }) => {
   const { userId } = await getAuth(args);
