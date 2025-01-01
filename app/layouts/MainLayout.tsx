@@ -5,7 +5,7 @@ import { NavBar } from "~/components/generic/Navbar";
 const MainLayout = () => {
   return (
     <>
-      <header className="flex items-center justify-between py-8 px-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+      <header className="sticky top-0 z-50 flex items-center justify-between py-8 px-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <Link
           to={AppRoutes.home}
           className="text-xl font-bold text-gray-900 dark:text-gray-50"
@@ -22,5 +22,4 @@ const MainLayout = () => {
     </>
   );
 };
-
 export default MainLayout;

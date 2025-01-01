@@ -1,22 +1,8 @@
 import { Link } from "react-router";
-import logoDark from "./logo-dark.svg";
-import logoLight from "./logo-light.svg";
 
 export function Welcome() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
-      <header className="mb-8">
-        <img
-          src={logoDark}
-          alt="Booksville"
-          className="block dark:hidden h-12"
-        />
-        <img
-          src={logoLight}
-          alt="Booksville"
-          className="hidden dark:block h-12"
-        />
-      </header>
       <main className="text-center">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-800 dark:text-white">
           Welcome to Booksville
