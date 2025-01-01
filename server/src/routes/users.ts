@@ -18,7 +18,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (props) => {
-  console.log("🚀 ~ createUser ~ props:", props);
   try {
     const {
       created_at,
