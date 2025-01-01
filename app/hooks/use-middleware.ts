@@ -8,7 +8,6 @@ const useMiddleware = async ({ args }: { args: Route.LoaderArgs }) => {
   const pathname = new URL(args.request.url).pathname;
 
   if (!userId && privateRoutes.includes(pathname)) {
-    console.log("called inside", pathname);
     throw redirect("/");
   }
 

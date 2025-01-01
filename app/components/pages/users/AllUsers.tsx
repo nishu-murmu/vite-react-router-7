@@ -11,7 +11,7 @@ import {
 
 const AllUsersComponent = ({ users }: any) => {
   return (
-    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center bg-background">
+    <div className="min-h-[calc(100vh-25rem)] flex items-center justify-center">
       <div className="container max-w-5xl py-6">
         <Card className="p-6">
           <h2 className="text-2xl font-bold mb-6 text-center">All Users</h2>

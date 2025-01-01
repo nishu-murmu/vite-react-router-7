@@ -5,8 +5,8 @@
 @layer base {
   :root {
     color-scheme: light;
-    color: theme('colors.gray.900');
-    background-color: theme('colors.white');
+    color: theme("colors.gray.900");
+    background-color: theme("colors.white");
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -36,8 +36,8 @@
 
   .dark {
     color-scheme: dark;
-    color: theme('colors.gray.50');
-    background-color: theme('colors.gray.950');
+    color: theme("colors.gray.50");
+    background-color: theme("colors.gray.950");
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
@@ -67,10 +67,55 @@
 
 /* Optional: Add smooth transitions for theme changes */
 @layer base {
+  :root {
+    /* Light mode scrollbar */
+    --scrollbar-bg: hsl(240 4.8% 95.9%);
+    --scrollbar-thumb: hsl(240 5.9% 90%);
+    --scrollbar-thumb-hover: hsl(240 5.9% 85%);
+  }
+
+  .dark {
+    /* Dark mode scrollbar */
+    --scrollbar-bg: hsl(240 3.7% 15.9%);
+    --scrollbar-thumb: hsl(240 3.7% 25%);
+    --scrollbar-thumb-hover: hsl(240 3.7% 35%);
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+  }
+
+  /* Chrome, Edge, Safari */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg);
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border: 3px solid var(--scrollbar-bg);
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--scrollbar-bg);
+  }
   * {
     @apply transition-colors duration-200;
   }
 }
+
 @layer base {
   * {
     @apply border-border;

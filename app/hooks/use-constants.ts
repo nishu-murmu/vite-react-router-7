@@ -10,25 +10,25 @@ const useConstants = () => {
       to: AppRoutes.home,
     },
     {
-      key: "contact-us",
-      name: "Contact Us",
-      to: AppRoutes.contactUs,
-    },
-    {
       key: "users",
       name: "Users",
       to: AppRoutes.users,
+    },
+    {
+      key: "books",
+      name: "Books",
+      to: AppRoutes.books,
+    },
+    {
+      key: "contact-us",
+      name: "Contact Us",
+      to: AppRoutes.contactUs,
     },
     {
       key: "create-book",
       name: "Create Book",
       to: AppRoutes.createBook,
       isHidden: !isLoaded || !userId,
-    },
-    {
-      key: "books",
-      name: "Books",
-      to: AppRoutes.books,
     },
   ];
   return {

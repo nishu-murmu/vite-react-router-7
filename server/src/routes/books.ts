@@ -5,15 +5,13 @@ import { sendResponse } from "../utils";
 export const createBook = async (req: Request, res: Response) => {
   try {
     const { title, author, user_id, is_public } = req.body;
-    const coverImage = req.file ? `/uploads/${req.file.filename}` : null;
-
     const book = await db
       .insertInto("tbl_books")
       .values({
         name: title,
         author: author,
-        image: coverImage,
-        is_public: is_public ? 1 : 0,
+        image: req.file ? `/uploads/${req.file.filename}` : null,
+        is_public: is_public === "true" ? 1 : 0,
         user_id: user_id,
       })
       .executeTakeFirst();
@@ -50,7 +48,7 @@ export const getPublicBooks = async (req: Request, res: Response) => {
       .selectFrom("tbl_books")
       .innerJoin("tbl_users", "tbl_books.user_id", "tbl_users.id")
       .selectAll()
-      .where("tbl_books.is_public", "=", 0)
+      .where("tbl_books.is_public", "=", 1)
       .execute();
 
     res.send(

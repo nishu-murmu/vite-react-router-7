@@ -13,3 +13,7 @@ export const publicRoutes = [
 ];
 
 export const privateRoutes = [AppRoutes.createBook];
+
+export const config = {
+  serverUrl: import.meta.env.VITE_SERVER_ENDPOINT as string,
+};

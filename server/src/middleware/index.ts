@@ -9,7 +9,7 @@ const corsConfig: cors.CorsOptions = {
   credentials: true,
 };
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.join(__dirname, "../../public")));
 app.use(cors(corsConfig));
 app.options("*", cors(corsConfig));
 app.get("/", (req, res) => {

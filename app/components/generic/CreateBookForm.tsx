@@ -102,8 +102,7 @@ const CreateBookForm = () => {
         body: submitData,
       });
 
-      const result = await response.json();
-      console.log("Form submitted:", result);
+      await response.json();
 
       // Clear form after successful submission
       setFormData({
