@@ -6,6 +6,9 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
+  server: {
+    host: "0.0.0.0", // or your local IP address
+  },
   css: {
     postcss: {
       plugins: [tailwindcss, autoprefixer],
