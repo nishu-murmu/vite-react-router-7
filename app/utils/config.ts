@@ -4,6 +4,7 @@ export const AppRoutes = {
   users: "/users",
   createBook: "/create-book",
   books: "/books",
+  chat: "/chat",
 };
 
 export const publicRoutes = [
@@ -12,7 +13,7 @@ export const publicRoutes = [
   AppRoutes.books,
 ];
 
-export const privateRoutes = [AppRoutes.createBook];
+export const privateRoutes = [AppRoutes.createBook, AppRoutes.chat];
 
 export const config = {
   serverUrl: import.meta.env.VITE_SERVER_ENDPOINT as string,

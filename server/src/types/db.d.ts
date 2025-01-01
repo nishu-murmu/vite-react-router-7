@@ -18,6 +18,28 @@ export interface TblBooks {
   user_id: string | null;
 }
 
+export interface TblChatMessages {
+  created_at: Generated<Date | null>;
+  id: string;
+  is_read: number | null;
+  message: string;
+  receiver_id: string;
+  sender_id: string;
+}
+
+export interface TblChatRoomMembers {
+  joined_at: Generated<Date | null>;
+  room_id: string;
+  user_id: string;
+}
+
+export interface TblChatRooms {
+  created_at: Generated<Date | null>;
+  created_by: string | null;
+  id: string;
+  name: string | null;
+}
+
 export interface TblUsers {
   created_at: Date | null;
   email_address: string | null;
@@ -29,5 +51,8 @@ export interface TblUsers {
 
 export interface DB {
   tbl_books: TblBooks;
+  tbl_chat_messages: TblChatMessages;
+  tbl_chat_room_members: TblChatRoomMembers;
+  tbl_chat_rooms: TblChatRooms;
   tbl_users: TblUsers;
 }

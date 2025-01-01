@@ -30,6 +30,12 @@ const useConstants = () => {
       to: AppRoutes.createBook,
       isHidden: !isLoaded || !userId,
     },
+    {
+      key: "chat",
+      name: "Chat Room",
+      to: AppRoutes.chat,
+      isHidden: !isLoaded || !userId,
+    },
   ];
   return {
     NavLinks,
