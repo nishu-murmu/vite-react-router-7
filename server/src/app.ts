@@ -10,7 +10,7 @@ export const app = express();
 
 import "./middleware";
 import "./routes";
-import { setupSocketServer } from "./routes/chat";
+import { setupSocketServer } from "./utils/socket";
 
 app.listen(process.env.PORT, () => {
   console.log("Listening on port 3000");

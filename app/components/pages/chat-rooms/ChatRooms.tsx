@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Hash, Plus, Users } from "lucide-react";
-import { Card } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { config } from "~/utils/config";
+import { useEffect, useState } from "react";
+import { Hash, Plus } from "lucide-react";
 import { useUser } from "@clerk/react-router";
+import { useNavigate } from "react-router";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "~/components/ui/card";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { Badge } from "~/components/ui/badge";
+import { AppRoutes, config } from "~/utils/config";
+import CreateChatRoom from "./CreateChatRoom";
 
 interface ChatRoom {
   id: string;
@@ -16,10 +25,10 @@ interface ChatRoom {
   created_at: Date;
 }
 
-const ChatRoomsList = ({ onRoomSelect }: any) => {
+const ChatRoomsList = () => {
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
-  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const { user } = useUser();
+  const navigate = useNavigate();
 
   const fetchChatRooms = async () => {
     try {
@@ -39,65 +48,78 @@ const ChatRoomsList = ({ onRoomSelect }: any) => {
   }, []);
 
   const handleRoomSelect = (room: ChatRoom) => {
-    setSelectedRoom(room.id);
-    onRoomSelect(room);
+    navigate(AppRoutes.singleChatRoom.replace(":id", room.id));
   };
 
   return (
-    <Card className="w-80 h-[600px] border-r flex flex-col">
-      <div className="p-4 border-b flex items-center justify-between">
-        <h2 className="text-lg font-semibold flex items-center gap-2">
-          <Hash className="h-5 w-5" />
+    <div className="container mx-auto py-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold flex items-center gap-2">
+          <Hash className="h-6 w-6" />
           Chat Rooms
-        </h2>
-        <Button variant="ghost" size="icon" className="hover:bg-muted">
-          <Plus className="h-5 w-5" />
-        </Button>
+        </h1>
+        <CreateChatRoom  onRoomCreated={fetchChatRooms} />
       </div>
 
-      <ScrollArea className="flex-1">
-        <div className="space-y-1">
+      <ScrollArea className="h-[calc(100vh-12rem)]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {chatRooms.map((room) => (
-            <div
+            <Card
               key={room.id}
-              className={`flex items-start gap-3 p-3 cursor-pointer hover:bg-muted transition-colors
-                ${selectedRoom === room.id ? "bg-muted" : ""}
-              `}
+              className="cursor-pointer hover:shadow-lg transition-shadow"
               onClick={() => handleRoomSelect(room)}
             >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border bg-background">
-                {room.icon ? (
-                  <img src={room.icon} alt={room.name} className="h-5 w-5" />
-                ) : (
-                  <Hash className="h-5 w-5 text-muted-foreground" />
-                )}
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-medium leading-none">{room.name}</h3>
+              <CardHeader className="space-y-1">
+                <div className="flex items-center space-x-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border bg-background">
+                    {room.icon ? (
+                      <img
+                        src={room.icon}
+                        alt={room.name}
+                        className="h-8 w-8"
+                      />
+                    ) : (
+                      <Hash className="h-8 w-8 text-muted-foreground" />
+                    )}
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">{room.name}</CardTitle>
+                    {room.topic && (
+                      <CardDescription className="text-sm">
+                        {room.topic}
+                      </CardDescription>
+                    )}
+                  </div>
                 </div>
-                {room.topic && (
-                  <p className="text-xs text-muted-foreground">
-                    Topic: {room.topic}
-                  </p>
-                )}
+              </CardHeader>
+
+              <CardContent>
                 {room.description && (
                   <p className="text-sm text-muted-foreground line-clamp-2">
                     {room.description}
                   </p>
                 )}
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Users className="h-3 w-3" />
-                  <span>
-                    Created by {room.created_by === user?.id ? "you" : "others"}
-                  </span>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+
+              <CardFooter className="flex justify-between items-center">
+                <Badge
+                  variant={
+                    room.created_by === user?.id ? "default" : "secondary"
+                  }
+                >
+                  {room.created_by === user?.id
+                    ? "Created by you"
+                    : "Created by others"}
+                </Badge>
+                <span className="text-xs text-muted-foreground">
+                  {new Date(room.created_at).toLocaleDateString()}
+                </span>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       </ScrollArea>
-    </Card>
+    </div>
   );
 };
 
