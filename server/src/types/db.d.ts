@@ -36,8 +36,11 @@ export interface TblChatRoomMembers {
 export interface TblChatRooms {
   created_at: Generated<Date | null>;
   created_by: string | null;
+  description: string | null;
+  icon: string | null;
   id: string;
   name: string | null;
+  topic: string | null;
 }
 
 export interface TblUsers {
