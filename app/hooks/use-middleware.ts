@@ -6,8 +6,7 @@ import type { Route } from "../+types/root";
 const useMiddleware = async ({ args }: { args: Route.LoaderArgs }) => {
   const { userId } = await getAuth(args);
   const pathname = new URL(args.request.url).pathname;
-
-  if (!userId && privateRoutes.includes(pathname)) {
+  if (!userId && !privateRoutes.every((r) => r.startsWith(pathname))) {
     throw redirect("/");
   }
 

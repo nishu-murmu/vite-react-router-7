@@ -10,12 +10,12 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { config } from "~/utils/config";
 
 interface ChatMessage {
-  id: string;
+  id?: string;
   sender_id: string;
   receiver_id: string;
   message: string;
-  created_at: Date;
-  is_read: boolean;
+  created_at?: Date;
+  is_read?: boolean;
 }
 
 interface Contact {
@@ -28,7 +28,9 @@ interface Contact {
 const ChatComponent = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
-  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [selectedContact, setSelectedContact] = useState<Contact | undefined>(
+    undefined
+  );
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -45,7 +47,9 @@ const ChatComponent = () => {
 
   // Scroll to bottom of messages
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({
+      block: "end",
+    });
   };
 
   // Fetch user contacts
@@ -57,7 +61,6 @@ const ChatComponent = () => {
         config.serverUrl + `/api/chat/contacts?userId=${user.id}`
       );
       const result = await response.json();
-      console.log("🚀 ~ fetchContacts ~ response:", response);
 
       if (result.status === "success") {
         setContacts(result.data);
@@ -78,7 +81,6 @@ const ChatComponent = () => {
       );
       const result = await response.json();
 
-      console.log("🚀 ~ fetchChatHistory ~ response:", response);
       if (result.status === "success") {
         setMessages(result.data);
         scrollToBottom();
@@ -90,7 +92,6 @@ const ChatComponent = () => {
 
   // Initialize Socket Connection
   useEffect(() => {
-    console.log(user?.id, " check");
     if (!user) return;
 
     // Connect to Socket.io server
@@ -100,13 +101,11 @@ const ChatComponent = () => {
 
     newSocket.on("connect", () => {
       console.log("Socket connected");
-      // Register user
       newSocket.emit("register_user", user.id);
     });
 
     // Listen for incoming messages
-    newSocket.on("receive_private_message", (message: ChatMessage) => {
-      console.log("🚀 ~ newSocket.on ~ message: private message", message);
+    const handlePrivateMessage = (message: ChatMessage) => {
       if (
         selectedContact &&
         (message.sender_id === selectedContact.id ||
@@ -115,15 +114,14 @@ const ChatComponent = () => {
         setMessages((prev) => [...prev, message]);
         scrollToBottom();
       }
-    });
-
+    };
+    newSocket.on("receive_private_message", handlePrivateMessage);
     setSocket(newSocket);
-
-    // Cleanup on unmount
     return () => {
+      newSocket.off("receive_private_message", handlePrivateMessage);
       newSocket.disconnect();
     };
-  }, [user]);
+  }, [user, selectedContact]); // Add selectedContact to dependencies
 
   // Fetch contacts when component mounts
   useEffect(() => {
@@ -140,8 +138,13 @@ const ChatComponent = () => {
   // Send message handler
   const handleSendMessage = () => {
     if (!socket || !user || !selectedContact || !newMessage.trim()) return;
-
-    console.log("gone", newMessage, user.id, selectedContact.id);
+    const newMessageObj = {
+      sender_id: user.id as string,
+      receiver_id: selectedContact.id as string,
+      message: newMessage as string,
+    };
+    setMessages((prev) => [...prev, newMessageObj]);
+    scrollToBottom();
 
     // Emit private message event
     socket.emit("private_message", {
@@ -236,7 +239,7 @@ const ChatComponent = () => {
         {/* Messages Area */}
         <ScrollArea className="flex-grow p-4">
           <div className="space-y-4">
-            {messages.map((msg, index) => (
+            {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex ${
@@ -252,12 +255,12 @@ const ChatComponent = () => {
                 >
                   <p>{msg.message}</p>
                   <p className="text-xs opacity-70 mt-1">
-                    {new Date(msg.created_at).toLocaleTimeString()}
+                    {new Date(msg?.created_at as Date).toLocaleTimeString()}
                   </p>
                 </div>
               </div>
             ))}
-            <div ref={messagesEndRef} />
+            <div ref={messagesEndRef}> </div>
           </div>
         </ScrollArea>
 

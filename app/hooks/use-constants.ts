@@ -33,7 +33,7 @@ const useConstants = () => {
     {
       key: "chat",
       name: "Chat Room",
-      to: AppRoutes.chat,
+      to: AppRoutes.chatRooms,
       isHidden: !isLoaded || !userId,
     },
   ];

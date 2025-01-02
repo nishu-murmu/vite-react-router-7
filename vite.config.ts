@@ -7,7 +7,10 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   server: {
-    host: "0.0.0.0", // or your local IP address
+    // host: "0.0.0.0", // or your local IP address
+    proxy: {
+      "/api": 'http://localhost:3000'
+    },
   },
   css: {
     postcss: {
